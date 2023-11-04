@@ -26,6 +26,7 @@ jobs:
           memory: 2GB
           core-fraction: 100
           subnet-id: e2l0rasal6bl7rqbn70i
+          zone-id: ru-central1-c
   do-the-job:
     name: Do the job on the runner
     needs: start-runner # required to start the main job when the runner is ready
