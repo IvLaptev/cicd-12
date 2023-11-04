@@ -21,7 +21,7 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           folder-id: b1g9i5gvivrsfctjin9q
-          # image-id: fd80*********
+          image-id: fd80o2eikcn22b229tsa
           cores: 2
           memory: 2GB
           core-fraction: 100
