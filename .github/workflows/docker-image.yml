@@ -5,23 +5,31 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  start-runner:
+    name: Start self-hosted YC runner
     runs-on: ubuntu-latest
-
+    outputs:
+      label: ${{ steps.start-yc-runner.outputs.label }}
+      instance-id: ${{ steps.start-yc-runner.outputs.instance-id }}
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag parker1331/cicd-12:latest
-
-    - name: Test
-      run: echo tests
-
-    - name: Docker Login
-      uses: docker/login-action@v3.0.0
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Push image
-      run: docker push parker1331/cicd-12:latest
+      - name: Start YC runner
+        id: start-yc-runner
+        uses: IvLaptev/yc-github-runner@v1.4
+        with:
+          auto-terminate: true
+          mode: start
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          folder-id: b1g9i5gvivrsfctjin9q
+          # image-id: fd80*********
+          cores: 2
+          memory: 2GB
+          core-fraction: 100
+          subnet-id: e2l0rasal6bl7rqbn70i
+  do-the-job:
+    name: Do the job on the runner
+    needs: start-runner # required to start the main job when the runner is ready
+    runs-on: ${{ needs.start-runner.outputs.label }} # run the job on the newly created runner
+    steps:
+      - name: Hello World
+        run: echo 'Hello World!'
